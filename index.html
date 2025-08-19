@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Course des Petits Princes - Jeu Caritatif</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Animation de fond */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(-45deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4, #FECA57);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            z-index: -1;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #FF6B6B;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #FF6B6B;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: #FF6B6B;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 2rem;
+            position: relative;
+        }
+
+        .hero-content {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 3rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 800px;
+            animation: floatUp 1s ease-out;
+        }
+
+        @keyframes floatUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-emoji {
+            font-size: 4rem;
+            display: block;
+            margin: 1rem 0;
+            animation: bounce 2s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            color: #555;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            color: white;
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255,107,107,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255,107,107,0.4);
+        }
+
+        /* Sections */
+        .section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.8;
+        }
+
+        /* Screenshots */
+        .screenshots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .screenshot {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 1rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .screenshot:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .screenshot-placeholder {
+            height: 200px;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Call to Action */
+        .cta-section {
+            background: rgba(255, 255, 255, 0.9);
+            margin: 3rem 2rem;
+            padding: 3rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid #FF6B6B;
+            color: #FF6B6B;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #FF6B6B;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer h3 {
+            margin-bottom: 1rem;
+            color: #FF6B6B;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #4ECDC4;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-content {
+                padding: 2rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .section {
+                padding: 3rem 1rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Animations d'apparition */
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .slide-up {
+            transform: translateY(50px);
+            opacity: 0;
+            animation: slideUp 1s ease forwards;
+        }
+
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">
+                👑 La Course des Petits Princes
+            </div>
+            <ul class="nav-links">
+                <li><a href="#accueil">Accueil</a></li>
+                <li><a href="#fonctionnalites">Fonctionnalités</a></li>
+                <li><a href="#captures">Aperçu</a></li>
+                <li><a href="#apropos">À propos</a></li>
+                <li><a href="#jouer">Jouer</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="accueil" class="hero">
+        <div class="hero-content">
+            <h1>La Course des Petits Princes</h1>
+            <span class="hero-emoji">🏃‍♂️👑</span>
+            <p>Un jeu de plateforme caritatif pour soutenir l'association Les Petits Princes et réaliser les rêves d'enfants malades</p>
+            <a href="#jouer" class="cta-button">🎮 Jouer Maintenant</a>
+        </div>
+    </section>
+
+    <!-- Fonctionnalités -->
+    <section id="fonctionnalites" class="section">
+        <h2 class="section-title">🌟 Fonctionnalités du Jeu</h2>
+        <div class="features-grid">
+            <div class="feature-card fade-in">
+                <span class="feature-icon">💰</span>
+                <h3>Collecte de Dons</h3>
+                <p>Collectez des pièces et des billets pour aider à financer les rêves des enfants. Chaque euro compte !</p>
+            </div>
+            <div class="feature-card fade-in">
+                <span class="feature-icon">⚡</span>
+                <h3>Bonus Spéciaux</h3>
+                <p>Découvrez des bonus magiques : super vitesse, aimant, bouclier protecteur et vies supplémentaires.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <span class="feature-icon">🏃‍♂️</span>
+                <h3>Gameplay Dynamique</h3>
+                <p>Sautez par-dessus les obstacles, évitez les dangers et maîtrisez la physique du jeu pour progresser.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <span class="feature-icon">📱</span>
+                <h3>Multi-Plateformes</h3>
+                <p>Jouez sur ordinateur avec le clavier ou sur mobile/tablette avec les contrôles tactiles optimisés.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <span class="feature-icon">🎯</span>
+                <h3>Système de Niveaux</h3>
+                <p>Progressez à travers différents niveaux de difficulté avec des défis toujours plus excitants.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <span class="feature-icon">💖</span>
+                <h3>Mission Caritative</h3>
+                <p>Chaque partie joue pour une bonne cause : soutenir les enfants malades et réaliser leurs rêves.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Aperçu du Jeu -->
+    <section id="captures" class="section">
+        <h2 class="section-title">🎮 Aperçu du Jeu</h2>
+        <div class="screenshots">
+            <div class="screenshot slide-up">
+                <div class="screenshot-placeholder">🏠</div>
+                <h3>Écran d'Accueil</h3>
+                <p>Interface moderne et accueillante avec connexion sécurisée</p>
+            </div>
+            <div class="screenshot slide-up">
+                <div class="screenshot-placeholder">🎮</div>
+                <h3>Gameplay</h3>
+                <p>Action fluide avec collecte d'objets et évitement d'obstacles</p>
+            </div>
+            <div class="screenshot slide-up">
+                <div class="screenshot-placeholder">⚡</div>
+                <h3>Bonus Spéciaux</h3>
+                <p>Effets visuels impressionnants et bonus stratégiques</p>
+            </div>
+            <div class="screenshot slide-up">
+                <div class="screenshot-placeholder">🏆</div>
+                <h3>Écran de Victoire</h3>
+                <p>Célébration des achievements avec statistiques détaillées</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistiques -->
+    <section class="section">
+        <h2 class="section-title">📊 Impact du Jeu</h2>
+        <div class="stats">
+            <div class="stat-card fade-in">
+                <span class="stat-number">100€</span>
+                <div class="stat-label">Objectif par partie</div>
+            </div>
+            <div class="stat-card fade-in">
+                <span class="stat-number">∞</span>
+                <div class="stat-label">Rêves possibles</div>
+            </div>
+            <div class="stat-card fade-in">
+                <span class="stat-number">5</span>
+                <div class="stat-label">Types de bonus</div>
+            </div>
+            <div class="stat-card fade-in">
+                <span class="stat-number">💫</span>
+                <div class="stat-label">Niveaux progressifs</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- À propos -->
+    <section id="apropos" class="cta-section">
+        <h2>💝 Une Mission qui a du Sens</h2>
+        <p>Ce jeu a été créé pour sensibiliser et soutenir l'association <strong>Les Petits Princes</strong>, qui réalise les rêves d'enfants et d'adolescents gravement malades.</p>
+        <p>En jouant, vous participez symboliquement à cette belle mission d'espoir et de bonheur.</p>
+        <div class="cta-buttons">
+            <a href="https://www.petitsprinces.com/" target="_blank" class="cta-button">💝 Faire un Don Réel</a>
+            <a href="#" class="btn-secondary">📖 En Savoir Plus</a>
+        </div>
+    </section>
+
+    <!-- Call to Action Principal -->
+    <section id="jouer" class="section">
+        <div class="cta-section">
+            <h2>🚀 Prêt à Commencer l'Aventure ?</h2>
+            <p>Rejoignez la course et aidez le petit prince à accomplir sa mission !</p>
+            <div class="cta-buttons">
+                <a href="#" onclick="launchGame()" class="cta-button">🎮 Lancer le Jeu</a>
+                <a href="#" class="btn-secondary">📋 Voir les Instructions</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <h3>👑 La Course des Petits Princes</h3>
+            <p>Un jeu avec du cœur pour une cause qui compte</p>
+            <div class="footer-links">
+                <a href="https://www.petitsprinces.com/" target="_blank">Association Les Petits Princes</a>
+                <a href="#">Conditions d'Utilisation</a>
+                <a href="#">Contact</a>
+                <a href="https://github.com/" target="_blank">Code Source</a>
+            </div>
+            <p style="margin-top: 1rem; opacity: 0.7;">
+                © 2025 - Créé avec ❤️ pour soutenir Les Petits Princes
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Animations au scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationDelay = '0.2s';
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observer tous les éléments avec animation
+        document.querySelectorAll('.feature-card, .screenshot, .stat-card').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scroll pour les liens de navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Fonction pour lancer le jeu (à adapter selon votre implémentation)
+        function launchGame() {
+            // Ici vous pouvez rediriger vers votre jeu ou l'ouvrir dans une modal
+            alert('🎮 Le jeu va se lancer ! (Remplacez cette alerte par votre logique de lancement)');
+            // window.open('votre-jeu.html', '_blank');
+            // ou window.location.href = 'votre-jeu.html';
+        }
+
+        // Effet parallaxe léger sur le hero
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero-content');
+            if (hero) {
+                hero.style.transform = `translateY(${scrolled * 0.1}px)`;
+            }
+        });
+
+        // Animation des statistiques au scroll
+        const animateNumbers = () => {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                if (stat.textContent !== '∞' && stat.textContent !== '💫') {
+                    const finalValue = parseInt(stat.textContent);
+                    let currentValue = 0;
+                    const increment = finalValue / 50;
+                    const timer = setInterval(() => {
+                        currentValue += increment;
+                        stat.textContent = Math.floor(currentValue);
+                        if (currentValue >= finalValue) {
+                            stat.textContent = finalValue + '€';
+                            clearInterval(timer);
+                        }
+                    }, 30);
+                }
+            });
+        };
+
+        // Observer pour les statistiques
+        const statsObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateNumbers();
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        });
+
+        const statsSection = document.querySelector('.stats');
+        if (statsSection) {
+            statsObserver.observe(statsSection);
+        }
+    </script>
+</body>
+</html>
